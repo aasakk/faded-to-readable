@@ -1,236 +1,235 @@
 # Manuscript Segmentation and Section Classification System
 
-Faded to Readable AI Project
+### Faded to Readable – AI-Based Document Enhancement Pipeline
 
-**(BCD-U-Net + Transformer Integration)**
-
-## Overview
-
-This project integrates document image segmentation and semantic text classification into a unified AI-driven workflow for making research manuscripts and academic documents easier to read.
-
-The system performs the following sequence of tasks automatically:
-
-1. Image segmentation using **BCD-U-Net** to isolate clean text regions from noisy manuscript scans.
-2. Optical Character Recognition (**OCR**) using **Tesseract** to convert extracted text into digital form.
-3. Paragraph-level classification using a **Transformer-based model** that labels each paragraph as *Introduction*, *Objective*, *Methodology*, *Results*, *Discussion*, or *References*.
-4. Visual annotation of the original manuscript image with color-coded bounding boxes for each classified section.
-
-The entire process runs through a **Flask-based web interface**, allowing users to upload scanned manuscript pages and view structured, labeled outputs both textually and visually.
-
-Training scripts for both models (BCD-U-Net and Transformer classifier) are also included in the project folder but are not required for running the deployed application, since pretrained models are already provided.
+BCD-U-Net + Transformer Integration
 
 ---
 
-## Project Directory
+## Overview
+
+This project presents an end-to-end AI pipeline for enhancing and structurally organizing scanned academic manuscripts.
+
+The system integrates document image segmentation and semantic paragraph classification into a unified workflow that transforms noisy manuscript scans into structured, readable, and annotated outputs.
+
+### The system performs:
+
+1. Document segmentation using BCD-U-Net to clean and isolate text regions from noisy scans
+2. OCR extraction using Tesseract to convert segmented text into digital form
+3. Paragraph-level classification using a Transformer model
+4. Visual annotation of manuscript pages with color-coded section labels
+
+Users can upload scanned manuscript pages through a Flask-based web interface and receive both structured text output and visually annotated images.
+
+---
+
+## System Architecture
+
+Image → BCD-U-Net Segmentation → OCR (Tesseract) → Paragraph Splitting → Transformer Classification → Visual Annotation → Web Display
+
+---
+
+## Project Structure
 
 ```
-faded to readable/
+faded_to_readable/
 │
-├── frontend1.py                # Flask backend integrating both models
+├── frontend1.py
+├── label_mapping.json
+├── tokenizer_config.json
+├── vocab.txt
 │
-├── weight_text.hdf5            # Pretrained BCD-U-Net model weights for segmentation
-├── manuscript_classifier.h5    # Transformer model weights for paragraph classification
-├── label_mapping.json          # Label index-to-name mappings for classifier output
-├── tokenizer_config.json       # Tokenizer configuration (for text preprocessing)
-├── vocab.txt                   # Tokenizer vocabulary
-│
-├── tf_model/                   # Folder containing transformer model components
+├── tf_model/
 │   ├── config.json
-│   ├── tf_model.h5
-│   └── other TensorFlow weight files
 │
 ├── static/
-│   ├── uploads/                # Temporarily stores uploaded manuscript images
-│   └── results/                # Saves processed, annotated output images
+│   ├── uploads/
+│   └── results/
 │
 ├── templates/
-│   └── index1.html             # Flask frontend for upload + result display
+│   └── index1.html
 │
-└── README.md                   # Documentation (this file)
+├── training_scripts/   (optional – model training files)
+│
+├── requirements.txt
+└── README.md
 ```
 
-*(Note: Training code files for both models are present in the project folder but are not shown in this directory structure since they are not required for execution when pretrained weights are available.)*
+Note: Pretrained model weights are not included in this repository due to size limitations. See Model Weights section below.
+
+---
+
+## Model Weights
+
+The following pretrained weights are required to run the system:
+
+* weight_text.hdf5 (BCD-U-Net segmentation model)
+* manuscript_classifier.h5 (Transformer classifier)
+* tf_model/tf_model.h5
+
+Download the pretrained weights from:
+
+[Google Drive Link Here]
+
+After downloading, place them in the root project directory as shown in the structure above.
+
+---
+
+## Technologies Used
+
+| Component           | Technology                   |
+| ------------------- | ---------------------------- |
+| Web Framework       | Flask                        |
+| Segmentation Model  | BCD-U-Net (TensorFlow/Keras) |
+| Text Classification | Transformer (TensorFlow)     |
+| OCR                 | Tesseract                    |
+| Image Processing    | OpenCV, Pillow               |
+| NLP                 | Transformers                 |
+| ML Utilities        | NumPy, Scikit-learn          |
 
 ---
 
 ## Requirements
 
-### Python Packages
+Install dependencies:
 
-Install all dependencies with:
+```
+pip install -r requirements.txt
+```
 
-```bash
+Or manually:
+
+```
 pip install flask tensorflow keras numpy pillow pytesseract opencv-python transformers torch torchvision scikit-learn
 ```
 
-| Library             | Purpose                          |
-| ------------------- | -------------------------------- |
-| Flask               | Hosts the web application        |
-| TensorFlow / Keras  | Loads and runs both models       |
-| NumPy               | Numerical and matrix operations  |
-| Pillow (PIL)        | Image loading and annotation     |
-| pytesseract         | OCR text extraction              |
-| OpenCV              | Image preprocessing utilities    |
-| Transformers        | Tokenizer and model inference    |
-| Torch / torchvision | Auxiliary model support          |
-| Scikit-learn        | Data utilities and preprocessing |
-
 ---
 
-### Tesseract OCR Setup
+## Tesseract OCR Setup
 
-Install **Tesseract OCR** for text extraction.
+### Windows
 
-**Windows:**
+Download:
+[https://github.com/UB-Mannheim/tesseract/wiki](https://github.com/UB-Mannheim/tesseract/wiki)
 
-* Download: [https://github.com/UB-Mannheim/tesseract/wiki](https://github.com/UB-Mannheim/tesseract/wiki)
-* Default path:
+Add this inside frontend1.py:
 
-  ```
-  C:\Program Files\Tesseract-OCR\tesseract.exe
-  ```
-* Add this line in `frontend1.py`:
+```python
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+```
 
-  ```python
-  import pytesseract
-  pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-  ```
+### Linux
 
-**Linux/macOS:**
-
-```bash
+```
 sudo apt install tesseract-ocr
 ```
 
 ---
 
-## System Workflow
+## How to Run
 
-### Step 1: Image Upload
+1. Navigate to the project directory:
 
-A manuscript image is uploaded via the Flask interface (`index1.html`). It is temporarily stored under `/static/uploads/`.
+```
+cd faded_to_readable
+```
 
-### Step 2: Segmentation with BCD-U-Net
+2. Start the Flask server:
 
-The **BCD-U-Net model (`weight_text.hdf5`)** performs document binarization, cleaning, and segmentation, removing background noise and preserving text regions.
-This model was trained on the DIBCO dataset for document enhancement and binarization tasks.
+```
+python frontend1.py
+```
 
-### Step 3: OCR Conversion
+3. Open browser:
 
-Using **Tesseract**, the clean segmented text is converted to digital text, which is split into paragraphs for classification.
+```
+http://127.0.0.1:5000/
+```
 
-### Step 4: Paragraph Classification
+4. Upload a manuscript image (.jpg, .png, .jpeg)
 
-The **Transformer classifier (`manuscript_classifier.h5`)** processes each paragraph and predicts section labels such as *Introduction*, *Objective*, *Methodology*, *Results*, *Discussion*, or *References*.
-Label mappings from numeric indices to section names are defined in `label_mapping.json`.
+5. View:
 
-### Step 5: Post-Processing and Annotation
-
-Paragraphs are matched to approximate bounding boxes on the original image using OCR coordinates.
-Each box is drawn in a different color and labeled with its predicted section type.
-The annotated output image is saved in `/static/results/`.
-
-### Step 6: Output Visualization
-
-The final page shows:
-
-* Classified text paragraphs with labels.
-* Annotated manuscript image with colored bounding boxes.
+   * Classified paragraphs
+   * Annotated manuscript image
 
 ---
 
-## Running the Application
+## Processing Workflow
 
-1. **Navigate to the project directory:**
+### Step 1 – Image Upload
 
-   ```bash
-   cd faded to readable
-   ```
+Image is stored temporarily in `/static/uploads/`.
 
-2. **Run the Flask app:**
+### Step 2 – Segmentation
 
-   ```bash
-   python frontend1.py
-   ```
+BCD-U-Net removes background noise and enhances text regions.
+Model trained on the DIBCO dataset for document binarization.
 
-3. **Access it in your browser:**
+### Step 3 – OCR
 
-   ```
-   http://127.0.0.1:5000/
-   ```
+Tesseract extracts text and provides bounding box coordinates.
 
-4. **Upload and analyze a document:**
+### Step 4 – Paragraph Classification
 
-   * Upload an image (`.jpg`, `.png`, `.jpeg`)
-   * Choose between *Text Cleaning* or *Segmentation*
-   * Wait for processing and view the results
+Transformer model predicts:
 
----
+* Title
+* Introduction
+* Objective
+* Methodology
+* Results
+* Discussion
+* References
 
-## Components Summary
+Label mapping handled via `label_mapping.json`.
 
-| Component                        | Description                                                    |
-| -------------------------------- | -------------------------------------------------------------- |
-| weight_text.hdf5                 | Pretrained BCD-U-Net weights for text segmentation             |
-| manuscript_classifier.h5         | Transformer model for paragraph-level section classification   |
-| label_mapping.json               | Defines numeric-to-label mapping for model outputs             |
-| tokenizer_config.json, vocab.txt | Tokenizer setup for text preprocessing                         |
-| frontend1.py                     | Flask script integrating segmentation, OCR, and classification |
-| index1.html                      | Upload and result display frontend                             |
-| static/uploads                   | Stores user-uploaded images temporarily                        |
-| static/results                   | Saves annotated output images                                  |
+### Step 5 – Annotation
+
+Bounding boxes are drawn around detected paragraphs with section-specific colors.
+Output saved in `/static/results/`.
 
 ---
 
-## Example Output
-
-Terminal log during execution:
+## Example Execution Log
 
 ```
 [INFO] Upload received: manuscript_page.png
-[INFO] Performing segmentation with BCD-U-Net...
+[INFO] Performing segmentation...
 [INFO] OCR extraction completed.
 [INFO] 6 paragraphs detected.
 [INFO] Predicted labels: ['Title', 'Introduction', 'Objective', 'Methodology', 'Results', 'References']
-[INFO] Annotated output saved to /static/results/result_manuscript_page.png
-```
-
-Display on webpage:
-
-```
-Paragraph 1 → Title  
-Paragraph 2 → Introduction  
-Paragraph 3 → Objective  
-Paragraph 4 → Methodology  
-Paragraph 5 → Results  
-Paragraph 6 → References  
+[INFO] Output saved to /static/results/result_manuscript_page.png
 ```
 
 ---
 
-## Accuracy Tips
+## Best Practices for Better Results
 
-* Use high-quality scans (≥300 DPI).
-* Avoid handwritten or overlapping annotations.
-* For multi-page manuscripts, process one page at a time.
-* Adjust paragraph splitting (`split("\n\n")`) based on text spacing.
-* Fine-tune the classifier model for improved domain-specific accuracy.
+* Use scans with at least 300 DPI resolution
+* Avoid handwritten notes and heavy annotations
+* Process one page at a time
+* Fine-tune classifier for domain-specific datasets
 
 ---
 
-## Future Work
+## Future Enhancements
 
-* Add multi-page PDF support.
-* Introduce user feedback–based retraining for adaptive labeling.
-* Improve layout recognition for two-column manuscripts.
-* Compute accuracy metrics for validation.
-* Deploy to cloud servers for online access.
+* Multi-page PDF support
+* Layout detection for multi-column manuscripts
+* User-feedback-driven adaptive retraining
+* Accuracy evaluation metrics
+* Cloud deployment support
 
 ---
 
 ## Authors
 
-Aasavari Khire 23BCB0105
-Drashi Manoria 23BCB0146
-Yash Khose 23BCE0625
+Aasavari Khire – 23BCB0105
+Drashi Manoria – 23BCB0146
+Yash Khose – 23BCE0625
+
+---
+
 
