@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document AI Tools</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 50px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .image-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        img {
+            max-width: 400px;
+            border: 2px solid white;
+            margin-bottom: 10px;
+        }
+        input[type="file"], select {
+            margin-top: 10px;
+            padding: 5px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: gray;
+            color: white;
+        }
+        a.download-btn {
+            margin-top: 10px;
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: white;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a.download-btn:hover {
+            background-color: gray;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Document AI Tools</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileInput" accept="image/*" onchange="previewUpload(event)">
+        <br>
+        <select name="model_choice" required>
+            <option value="" disabled selected>Select Model</option>
+            <option value="text_cleaning">Text Cleaning (BCD-Unet)</option>
+            <option value="segmentation">Manuscript Segmentation</option>
+        </select>
+        <br>
+        <button type="submit">Process Image</button>
+    </form>
+
+    <div class="container">
+        <div class="image-box">
+            <h3>Uploaded Image</h3>
+            <img id="uploadedImage" src="{{ uploaded or '#' }}" alt="Uploaded Image" {% if not uploaded %}style="display:none;"{% endif %}>
+        </div>
+        <div class="image-box">
+            <h3>Processed Result</h3>
+            <img id="processedImage" src="{{ result or '#' }}" alt="Processed Image" {% if not result %}style="display:none;"{% endif %}>
+            {% if result %}
+                <a href="{{ result }}" download class="download-btn">Download Result</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function previewUpload(event) {
+            const uploadedImage = document.getElementById('uploadedImage');
+            uploadedImage.src = URL.createObjectURL(event.target.files[0]);
+            uploadedImage.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

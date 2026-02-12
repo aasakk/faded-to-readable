@@ -1,0 +1,33 @@
+{
+  "id2label": {
+    "0": "conclusion",
+    "1": "discussion",
+    "2": "introduction",
+    "3": "literature_review",
+    "4": "methodology",
+    "5": "references",
+    "6": "results",
+    "7": "title"
+  },
+  "label2id": {
+    "conclusion": 0,
+    "discussion": 1,
+    "introduction": 2,
+    "literature_review": 3,
+    "methodology": 4,
+    "references": 5,
+    "results": 6,
+    "title": 7
+  },
+  "num_labels": 8,
+  "sections": [
+    "conclusion",
+    "discussion",
+    "introduction",
+    "literature_review",
+    "methodology",
+    "references",
+    "results",
+    "title"
+  ]
+}
