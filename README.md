@@ -68,7 +68,7 @@ The following pretrained weights are required to run the system:
 * tf_model/tf_model.h5
 
 Download the pretrained weights from:
-(https://drive.google.com/drive/folders/1KpAgThmyI9tf0My4Jq1P_vu-OmSpew6a?usp=sharing)
+https://drive.google.com/drive/folders/1KpAgThmyI9tf0My4Jq1P_vu-OmSpew6a?usp=sharing
 
 After downloading, place them in the root project directory as shown in the structure above.
 
@@ -230,6 +230,7 @@ Drashi Manoria – 23BCB0146
 Yash Khose – 23BCE0625
 
 ---
+
 
 
 
